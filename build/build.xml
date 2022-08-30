@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ClassicApplet3" default="BuildHelloWorld" basedir=".">
+    <get src="https://github.com/martinpaljak/ant-javacard/releases/latest/download/ant-javacard.jar" dest="." skipexisting="true"/>
+    <taskdef name="javacard" classname="pro.javacard.ant.JavaCard" classpath="ant-javacard.jar"/>
+    <target name="Clean" description="Cleaning up">
+        <delete dir="cap-files"/>
+    </target>
+    <target name="BuildHelloWorld" description="Building HelloWorld CAP file">
+        <property environment="env"/>
+        <javacard jckit="${env.HOME}/Downloads/002/smartcard-tools/sdk/oracle_javacard_sdks/jc304_kit">
+            <cap package="dka.javacard.helloworld" aid="65:3E:A3:DC:5B" output="cap-files/dka.javacard.helloworld.cap" sources="../src" version="1.0">
+                <applet class="HelloWorld" aid="65:3E:A3:DC:5B:63"/>
+            </cap>
+        </javacard>
+    </target>
+</project>
