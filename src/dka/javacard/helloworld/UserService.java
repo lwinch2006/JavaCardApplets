@@ -17,6 +17,7 @@ public final class UserService {
     private final byte[] _email = new byte[EMAIL_MAX_LENGTH];
     private final byte[] _phone = new byte[PHONE_MAX_LENGTH];
     private final byte[] _photo = new byte[PHOTO_MAX_LENGTH];
+    private boolean _photoIsValid = false;
 
     public UserService() {
         seedTestData();
@@ -38,7 +39,11 @@ public final class UserService {
         ApduUtils.sendDataToCAD(apdu, _phone, PHONE_MAX_LENGTH);
     }
 
-    public void getPhoto(APDU apdu) {
+    public void getPhoto(APDU apdu) throws ISOException {
+        if (!_photoIsValid) {
+            ISOException.throwIt(ISO7816.SW_DATA_INVALID);
+        }
+
         ApduUtils._dataSource = _photo;
         ApduUtils._bytesLeft = PHOTO_MAX_LENGTH;
         ApduUtils._bytesOffset = 0;
@@ -59,5 +64,7 @@ public final class UserService {
         Util.arrayFillNonAtomic(_photo, (short) 0, (short)256, (byte) 7);
         Util.arrayFillNonAtomic(_photo, (short) 256, (short)1, (byte) 2);
         Util.arrayFillNonAtomic(_photo, (short) 257, (short)(PHOTO_MAX_LENGTH - 257), (byte) 3);
+
+        _photoIsValid = true;
     }
 }

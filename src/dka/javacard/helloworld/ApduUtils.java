@@ -8,13 +8,11 @@ import javacard.framework.Util;
 public final class ApduUtils {
     private ApduUtils() {}
 
-    public static final short S_0 = 0;
-
     public static byte[] _dataSource = null;
     public static short _bytesLeft = 0;
     public static short _bytesOffset = 0;
 
-    public static void sendDataToCAD(APDU apdu, byte[] data, short dataLength) {
+    public static void sendDataToCAD(APDU apdu, byte[] data, short dataLength) throws ISOException {
         byte[] buffer = apdu.getBuffer();
         short le = apdu.setOutgoing();
 
@@ -23,11 +21,11 @@ public final class ApduUtils {
         }
 
         apdu.setOutgoingLength(dataLength);
-        Util.arrayCopyNonAtomic(data, S_0, buffer, S_0, dataLength);
-        apdu.sendBytes(S_0, dataLength);
+        Util.arrayCopyNonAtomic(data, Constants.S_0, buffer, Constants.S_0, dataLength);
+        apdu.sendBytes(Constants.S_0, dataLength);
     }
 
-    public static void getResponse(APDU apdu) {
+    public static void getResponse(APDU apdu) throws ISOException {
         short le = apdu.setOutgoing();
         short dataLength = _bytesLeft > le ? le : _bytesLeft;
 

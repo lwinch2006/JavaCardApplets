@@ -7,14 +7,26 @@ public class HelloWorld extends Applet implements ExtendedLength {
     private final UserService _userService;
     private final SampleService _sampleService;
 
+
+    private static final short MAX_BUFFER_SIZE = 2048;
+    private final byte[] _buffer;
+    private short _bufferLength = 0;
+    private short _bufferOffset = 0;
+    private short _bufferINS = 0;
+
+
+    private final byte[] _shortValueAsBytes = new byte[2];
+
+
     public static void install(byte[] bArray, short bOffset, byte bLength) {
-        new HelloWorld();
+        new HelloWorld().register();
     }
 
     protected HelloWorld() {
         _userService = new UserService();
         _sampleService = new SampleService();
-        register();
+
+        _buffer = JCSystem.makeTransientByteArray(MAX_BUFFER_SIZE, JCSystem.CLEAR_ON_DESELECT);
     }
 
     public void process(APDU apdu) {
@@ -26,8 +38,12 @@ public class HelloWorld extends Applet implements ExtendedLength {
         byte CLA = buffer[ISO7816.OFFSET_CLA];
         byte INS = buffer[ISO7816.OFFSET_INS];
 
-        if (CLA != ApduContants.HW_CLA) {
+        if (CLA != ApduContants.HW_CLA && CLA != ApduContants.HW_CHAIN_CLA) {
             ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
+        }
+
+        if ((INS & Constants.B_40) == Constants.B_40) {
+            doCommandChaining(apdu);
         }
 
         switch (INS) {
@@ -71,8 +87,69 @@ public class HelloWorld extends Applet implements ExtendedLength {
                 _sampleService.getOutBlockSize(apdu);
                 return;
 
+            case ApduContants.HW_GET_BUFFER_BYTES_SUM:
+                getBufferBytesSum(apdu);
+                return;
+
             default:
                 ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
         }
+    }
+
+    private void getBufferBytesSum(APDU apdu) {
+        short sum = 0;
+
+        for (short index = 0; index <= _bufferOffset; index++) {
+            sum += _buffer[index];
+        }
+
+        Util.setShort(_shortValueAsBytes, Constants.S_0, sum);
+        ApduUtils.sendDataToCAD(apdu, _shortValueAsBytes, (short) 2);
+        ResetBuffer();
+    }
+
+    private void doCommandChaining(APDU apdu) throws ISOException {
+        byte[] buffer = apdu.getBuffer();
+        short CLA = buffer[ISO7816.OFFSET_CLA];
+        short INS = buffer[ISO7816.OFFSET_INS];
+        short P1P2 = Util.makeShort(buffer[ISO7816.OFFSET_P1], buffer[ISO7816.OFFSET_P2]);
+        short offsetCData = apdu.getOffsetCdata();
+        short readCount = apdu.setIncomingAndReceive();
+        short lc = apdu.getIncomingLength();
+
+        while (lc > 0) {
+            if ((short)(_bufferOffset + readCount) > MAX_BUFFER_SIZE) {
+                ResetBuffer();
+                ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
+            }
+
+            Util.arrayCopyNonAtomic(buffer, offsetCData, _buffer, _bufferOffset, readCount);
+            _bufferOffset += readCount;
+            _bufferLength = _bufferOffset;
+
+            lc -= readCount;
+            readCount = apdu.receiveBytes(offsetCData);
+        }
+
+        if (_bufferINS == 0) {
+            _bufferINS = INS;
+        }
+
+        if (CLA == ApduContants.HW_CHAIN_CLA) {
+            if (_bufferINS == INS) {
+                ISOException.throwIt(ISO7816.SW_NO_ERROR);
+            } else {
+                ResetBuffer();
+                ISOException.throwIt(ISO7816.SW_LAST_COMMAND_EXPECTED);
+            }
+        }
+    }
+
+    private void ResetBuffer() {
+        _bufferLength = 0;
+        _bufferOffset = 0;
+        _bufferINS = 0;
+
+        Util.arrayFillNonAtomic(_buffer, Constants.S_0, MAX_BUFFER_SIZE, Constants.B_0);
     }
 }
