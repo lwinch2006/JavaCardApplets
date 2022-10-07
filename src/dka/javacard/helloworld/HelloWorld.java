@@ -7,16 +7,14 @@ public class HelloWorld extends Applet implements ExtendedLength {
     private final UserService _userService;
     private final SampleService _sampleService;
 
-
     private static final short MAX_BUFFER_SIZE = 2048;
     private final byte[] _buffer;
-    private short _bufferLength = 0;
-    private short _bufferOffset = 0;
-    private short _bufferINS = 0;
-
+    private short _bufferLength = Constants.S_0;
+    private short _bufferOffset = Constants.S_0;
+    private byte _bufferINS = Constants.B_FF;
+    private short _bufferP1P2 = Constants.S_FFFF;
 
     private final byte[] _shortValueAsBytes = new byte[2];
-
 
     public static void install(byte[] bArray, short bOffset, byte bLength) {
         new HelloWorld().register();
@@ -110,8 +108,8 @@ public class HelloWorld extends Applet implements ExtendedLength {
 
     private void doCommandChaining(APDU apdu) throws ISOException {
         byte[] buffer = apdu.getBuffer();
-        short CLA = buffer[ISO7816.OFFSET_CLA];
-        short INS = buffer[ISO7816.OFFSET_INS];
+        byte CLA = buffer[ISO7816.OFFSET_CLA];
+        byte INS = buffer[ISO7816.OFFSET_INS];
         short P1P2 = Util.makeShort(buffer[ISO7816.OFFSET_P1], buffer[ISO7816.OFFSET_P2]);
         short offsetCData = apdu.getOffsetCdata();
         short readCount = apdu.setIncomingAndReceive();
@@ -125,30 +123,35 @@ public class HelloWorld extends Applet implements ExtendedLength {
 
             Util.arrayCopyNonAtomic(buffer, offsetCData, _buffer, _bufferOffset, readCount);
             _bufferOffset += readCount;
-            _bufferLength = _bufferOffset;
+            //_bufferLength = _bufferOffset;
 
             lc -= readCount;
             readCount = apdu.receiveBytes(offsetCData);
         }
 
-        if (_bufferINS == 0) {
+        if (_bufferINS == Constants.B_FF) {
             _bufferINS = INS;
         }
 
+        if (_bufferP1P2 == Constants.S_FFFF) {
+            _bufferP1P2 = P1P2;
+        }
+
+        if (_bufferINS != INS || _bufferP1P2 != P1P2) {
+            ResetBuffer();
+            ISOException.throwIt(ISO7816.SW_LAST_COMMAND_EXPECTED);
+        }
+
         if (CLA == ApduContants.HW_CHAIN_CLA) {
-            if (_bufferINS == INS) {
-                ISOException.throwIt(ISO7816.SW_NO_ERROR);
-            } else {
-                ResetBuffer();
-                ISOException.throwIt(ISO7816.SW_LAST_COMMAND_EXPECTED);
-            }
+            ISOException.throwIt(ISO7816.SW_NO_ERROR);
         }
     }
 
     private void ResetBuffer() {
-        _bufferLength = 0;
-        _bufferOffset = 0;
-        _bufferINS = 0;
+        //_bufferLength = Constants.S_0;
+        _bufferOffset = Constants.S_0;
+        _bufferINS = Constants.B_FF;
+        _bufferP1P2 = Constants.S_FFFF;
 
         Util.arrayFillNonAtomic(_buffer, Constants.S_0, MAX_BUFFER_SIZE, Constants.B_0);
     }
