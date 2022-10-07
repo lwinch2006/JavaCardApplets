@@ -19,8 +19,6 @@ public final class ApduContants {
     public static final byte HW_GET_EMAIL_INS = (byte) 0x04;
     public static final byte HW_GET_PHONE_INS = (byte) 0x05;
     public static final byte HW_GET_PHOTO_INS = (byte) 0x06;
-
-    // Case 3
     public static final byte HW_GET_RESPONSE_INS = (byte) 0xC0;
 
     // Sample INS
@@ -30,5 +28,5 @@ public final class ApduContants {
     public static final byte HW_GET_OUTBLOCKSIZE_INS = (byte) 0x09;
 
     // Case 4
-    public static final byte HW_GET_BUFFER_BYTES_SUM = (byte) 0x4A;
+    public static final byte HW_GET_BUFFER_BYTES_SUM = (byte) 0x30;
 }

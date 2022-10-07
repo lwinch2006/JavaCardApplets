@@ -40,7 +40,7 @@ public class HelloWorld extends Applet implements ExtendedLength {
             ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
         }
 
-        if ((INS & Constants.B_40) == Constants.B_40) {
+        if ((INS >> 4 & Constants.B_0F) == 0x03) {
             doCommandChaining(apdu);
         }
 
