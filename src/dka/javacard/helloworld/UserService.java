@@ -10,14 +10,13 @@ public final class UserService {
     private static final byte LASTNAME_MAX_LENGTH = (byte) 25;
     private static final byte EMAIL_MAX_LENGTH = (byte) 50;
     private static final byte PHONE_MAX_LENGTH = (byte) 25;
-    private static final short PHOTO_MAX_LENGTH = (short) 1221; //16384; // 128x128
+    private static final short PHOTO_MAX_LENGTH = (short) 2048; //1221; //16384; // 128x128
 
     private final byte[] _firstName = new byte[FIRSTNAME_MAX_LENGTH];
     private final byte[] _surName = new byte[LASTNAME_MAX_LENGTH];
     private final byte[] _email = new byte[EMAIL_MAX_LENGTH];
     private final byte[] _phone = new byte[PHONE_MAX_LENGTH];
     private final byte[] _photo = new byte[PHOTO_MAX_LENGTH];
-    private boolean _photoIsValid = false;
 
     public UserService() {
         seedTestData();
@@ -40,14 +39,13 @@ public final class UserService {
     }
 
     public void getPhoto(APDU apdu) throws ISOException {
-        if (!_photoIsValid) {
-            ISOException.throwIt(ISO7816.SW_DATA_INVALID);
-        }
-
         ApduUtils._dataSource = _photo;
         ApduUtils._bytesLeft = PHOTO_MAX_LENGTH;
         ApduUtils._bytesOffset = 0;
-        ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | PHOTO_MAX_LENGTH));
+
+        short dataLength = PHOTO_MAX_LENGTH > ApduContants.MAX_LE_VALUE ? Constants.S_FF : PHOTO_MAX_LENGTH;
+
+        ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | dataLength));
     }
 
     private void seedTestData() {
@@ -64,7 +62,5 @@ public final class UserService {
         Util.arrayFillNonAtomic(_photo, (short) 0, (short)256, (byte) 7);
         Util.arrayFillNonAtomic(_photo, (short) 256, (short)1, (byte) 2);
         Util.arrayFillNonAtomic(_photo, (short) 257, (short)(PHOTO_MAX_LENGTH - 257), (byte) 3);
-
-        _photoIsValid = true;
     }
 }

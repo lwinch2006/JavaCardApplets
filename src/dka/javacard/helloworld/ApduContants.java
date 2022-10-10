@@ -3,7 +3,7 @@ package dka.javacard.helloworld;
 public final class ApduContants {
     private ApduContants() {}
 
-    public static final short MAX_APDU_DATA_LENGTH = 256;
+    public static final short MAX_LE_VALUE = 255;
     public static final short MAX_TEMP_BUFFER_LENGTH = 2048;
 
     // CLA
