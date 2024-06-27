@@ -7,8 +7,8 @@
     </target>
     <target name="BuildHelloWorld" description="Building HelloWorld CAP file">
         <property environment="env"/>
-        <javacard jckit="${env.HOME}/Downloads/002/smartcard-tools/sdk/oracle_javacard_sdks/jc304_kit">
-            <cap package="dka.javacard.helloworld" aid="D2:76:00:01:24:10:00:00" output="cap-files/dka.javacard.helloworld.cap" sources="../src" version="1.0">
+        <javacard jckit="${env.HOME}/Downloads/002/smartcard-tools/sdk/oracle_javacard_sdks/jc320v24.0_kit">
+            <cap targetsdk="${env.HOME}/Downloads/002/smartcard-tools/sdk/oracle_javacard_sdks/jc304_kit" package="dka.javacard.helloworld" aid="D2:76:00:01:24:10:00:00" output="cap-files/dka.javacard.helloworld.cap" sources="../src" version="1.0">
                 <applet class="HelloWorld" aid="D2:76:00:01:24:10:00:01"/>
             </cap>
         </javacard>

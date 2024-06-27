@@ -28,5 +28,5 @@ public final class ApduContants {
     public static final byte HW_GET_OUTBLOCKSIZE_INS = (byte) 0x09;
 
     // Case 4
-    public static final byte HW_GET_BUFFER_BYTES_SUM = (byte) 0x30;
+    public static final byte HW_GET_BUFFER_BYTES_SUM_INS = (byte) 0x30;
 }

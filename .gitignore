@@ -396,3 +396,5 @@ FodyWeavers.xsd
 # Misc folders and files
 .idea/
 build/cap-files/
+out/
+lib/

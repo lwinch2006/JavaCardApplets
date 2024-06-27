@@ -40,6 +40,7 @@ public class HelloWorld extends Applet implements ExtendedLength {
             ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
         }
 
+        // Here we need just to compare against chaining CLA, e.g. 0x84. We don't need to check INS.
         if ((INS >> 4 & Constants.B_0F) == 0x03) {
             doCommandChaining(apdu);
         }
@@ -85,7 +86,7 @@ public class HelloWorld extends Applet implements ExtendedLength {
                 _sampleService.getOutBlockSize(apdu);
                 return;
 
-            case ApduContants.HW_GET_BUFFER_BYTES_SUM:
+            case ApduContants.HW_GET_BUFFER_BYTES_SUM_INS:
                 getBufferBytesSum(apdu);
                 return;
 
