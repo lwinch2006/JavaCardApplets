@@ -1,5 +1,6 @@
-package dka.javacard.helloworld;
+package dka.javacard.shared;
 
+import dka.javacard.helloworld.ApduConstants;
 import javacard.framework.APDU;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
@@ -40,7 +41,7 @@ public final class ApduUtils {
             return;
         }
 
-        if (_bytesLeft > ApduContants.MAX_LE_VALUE) {
+        if (_bytesLeft > ApduConstants.MAX_LE_VALUE) {
             ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | Constants.S_FF));
         }
 

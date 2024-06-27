@@ -1,4 +1,4 @@
-package dka.javacard.helloworld;
+package dka.javacard.shared;
 
 public final class Constants {
     private Constants() {}

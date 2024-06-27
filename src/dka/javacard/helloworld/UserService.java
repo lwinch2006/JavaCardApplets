@@ -1,5 +1,7 @@
 package dka.javacard.helloworld;
 
+import dka.javacard.shared.ApduUtils;
+import dka.javacard.shared.Constants;
 import javacard.framework.APDU;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
@@ -46,7 +48,7 @@ public final class UserService {
         ApduUtils._bytesLeft = _photoLength;
         ApduUtils._bytesOffset = 0;
 
-        short dataLength = _photoLength > ApduContants.MAX_LE_VALUE ? Constants.S_FF : _photoLength;
+        short dataLength = _photoLength > ApduConstants.MAX_LE_VALUE ? Constants.S_FF : _photoLength;
 
         ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | dataLength));
     }

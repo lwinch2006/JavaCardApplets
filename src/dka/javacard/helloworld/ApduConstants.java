@@ -1,15 +1,10 @@
 package dka.javacard.helloworld;
 
-public final class ApduContants {
-    private ApduContants() {}
+public final class ApduConstants {
+    private ApduConstants() {}
 
     public static final short MAX_LE_VALUE = 255;
-    public static final short MAX_TEMP_BUFFER_LENGTH = 2048;
-
-    // CLA
-    public static final byte HW_CLA = (byte) 0x80;
-    public static final byte HW_CHAIN_CLA = (byte) 0x84;
-
+    public static final short MAX_COMMAND_CHAINING_BUFFER_SIZE = 2048;
 
     // INS
     // Case 2
@@ -20,12 +15,6 @@ public final class ApduContants {
     public static final byte HW_GET_PHONE_INS = (byte) 0x05;
     public static final byte HW_GET_PHOTO_INS = (byte) 0x06;
     public static final byte HW_GET_RESPONSE_INS = (byte) 0xC0;
-
-    // Sample INS
-    // Case 2
-    public static final byte HW_GET_APDU_BUFFER_LENGTH_INS = (byte) 0x07;
-    public static final byte HW_GET_INBLOCKSIZE_INS = (byte) 0x08;
-    public static final byte HW_GET_OUTBLOCKSIZE_INS = (byte) 0x09;
 
     // Case 4
     public static final byte HW_GET_BUFFER_BYTES_SUM_INS = (byte) 0x30;
