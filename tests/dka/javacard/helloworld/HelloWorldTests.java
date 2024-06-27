@@ -35,7 +35,7 @@ public class HelloWorldTests {
         //CommandAPDU commandAPDU = new CommandAPDU(0x00, 0x01, 0x00, 0x00);
         //ResponseAPDU responseAPDU = simulator.transmitCommand(commandAPDU);
 
-        assertEquals(0x9000, 0x9000);
+        //assertEquals(0x9000, 0x9000);
     }
 
 }

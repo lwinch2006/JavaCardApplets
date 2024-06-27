@@ -1,6 +1,5 @@
 package dka.javacard.shared;
 
-import dka.javacard.helloworld.ApduConstants;
 import javacard.framework.*;
 
 public final class CommandChainingService {
