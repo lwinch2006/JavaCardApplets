@@ -398,3 +398,4 @@ FodyWeavers.xsd
 build/cap-files/
 out/
 lib/
+.DS_Store
