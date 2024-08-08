@@ -1,7 +1,5 @@
 package dka.javacard.helloworld;
 
-import dka.javacard.shared.ApduUtils;
-import dka.javacard.shared.Constants;
 import javacard.framework.APDU;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
@@ -28,27 +26,27 @@ public final class UserService {
     }
 
     public void getFirstName(APDU apdu) {
-        ApduUtils.sendDataToCAD(apdu, _firstName, FIRSTNAME_MAX_LENGTH);
+        SharedApduUtils.sendDataToCAD(apdu, _firstName, FIRSTNAME_MAX_LENGTH);
     }
 
     public void getLastName(APDU apdu) {
-        ApduUtils.sendDataToCAD(apdu, _surName, LASTNAME_MAX_LENGTH);
+        SharedApduUtils.sendDataToCAD(apdu, _surName, LASTNAME_MAX_LENGTH);
     }
 
     public void getEmail(APDU apdu) {
-        ApduUtils.sendDataToCAD(apdu, _email, EMAIL_MAX_LENGTH);
+        SharedApduUtils.sendDataToCAD(apdu, _email, EMAIL_MAX_LENGTH);
     }
 
     public void getPhone(APDU apdu) {
-        ApduUtils.sendDataToCAD(apdu, _phone, PHONE_MAX_LENGTH);
+        SharedApduUtils.sendDataToCAD(apdu, _phone, PHONE_MAX_LENGTH);
     }
 
     public void getPhoto(APDU apdu) throws ISOException {
-        ApduUtils._dataSource = _photo;
-        ApduUtils._bytesLeft = _photoLength;
-        ApduUtils._bytesOffset = 0;
+        SharedApduUtils._dataSource = _photo;
+        SharedApduUtils._bytesLeft = _photoLength;
+        SharedApduUtils._bytesOffset = 0;
 
-        short dataLength = _photoLength > ApduConstants.MAX_LE_VALUE ? Constants.S_FF : _photoLength;
+        short dataLength = _photoLength > ApduConstants.MAX_LE_VALUE ? SharedConstants.S_FF : _photoLength;
 
         ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | dataLength));
     }
@@ -59,12 +57,12 @@ public final class UserService {
         byte[] email = {'D', 'm', 'i', 't', 'r', 'y', 'K', 'a', 'l', 'i', 'n', 'i', 'n', '@', 'i', 'c', 'l', 'o', 'u', 'd', '.', 'c', 'o', 'm'};
         byte[] phone = {'+', '4', '7', '4', '1', '5', '1', '0', '5', '7', '9'};
 
-        Util.arrayCopyNonAtomic(firstName, Constants.S_0, _firstName, Constants.S_0, (short) firstName.length);
-        Util.arrayCopyNonAtomic(surName, Constants.S_0, _surName, Constants.S_0, (short) surName.length);
-        Util.arrayCopyNonAtomic(email, Constants.S_0, _email, Constants.S_0, (short) email.length);
-        Util.arrayCopyNonAtomic(phone, Constants.S_0, _phone, Constants.S_0, (short) phone.length);
+        Util.arrayCopyNonAtomic(firstName, SharedConstants.S_0, _firstName, SharedConstants.S_0, (short) firstName.length);
+        Util.arrayCopyNonAtomic(surName, SharedConstants.S_0, _surName, SharedConstants.S_0, (short) surName.length);
+        Util.arrayCopyNonAtomic(email, SharedConstants.S_0, _email, SharedConstants.S_0, (short) email.length);
+        Util.arrayCopyNonAtomic(phone, SharedConstants.S_0, _phone, SharedConstants.S_0, (short) phone.length);
 
         _photoLength = (short) _photoSample.length;
-        Util.arrayCopyNonAtomic(_photoSample, Constants.S_0, _photo, Constants.S_0, _photoLength);
+        Util.arrayCopyNonAtomic(_photoSample, SharedConstants.S_0, _photo, SharedConstants.S_0, _photoLength);
     }
 }

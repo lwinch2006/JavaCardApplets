@@ -1,6 +1,6 @@
-package dka.javacard.shared;
+package dka.javacard.helloworld;
 
-public final class ApduConstantsShared {
+public final class SharedApduConstants {
     // CLA
     public static final byte HW_CLA = (byte) 0x80;
     public static final byte HW_CHAIN_CLA = (byte) 0x84;

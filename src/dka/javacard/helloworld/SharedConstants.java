@@ -1,7 +1,7 @@
-package dka.javacard.shared;
+package dka.javacard.helloworld;
 
-public final class Constants {
-    private Constants() {}
+public final class SharedConstants {
+    private SharedConstants() {}
 
     public static final short S_0 = 0;
     public static final short S_FF = 0xFF;

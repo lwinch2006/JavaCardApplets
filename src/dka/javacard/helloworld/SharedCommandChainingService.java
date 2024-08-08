@@ -1,16 +1,16 @@
-package dka.javacard.shared;
+package dka.javacard.helloworld;
 
 import javacard.framework.*;
 
-public final class CommandChainingService {
-    private short _bufferOffset = Constants.S_0;
-    private byte _bufferINS = Constants.B_FF;
-    private short _bufferP1P2 = Constants.S_FFFF;
+public final class SharedCommandChainingService {
+    private short _bufferOffset = SharedConstants.S_0;
+    private byte _bufferINS = SharedConstants.B_FF;
+    private short _bufferP1P2 = SharedConstants.S_FFFF;
 
     private final short _maxBufferSize;
     private final byte[] _buffer;
 
-    public CommandChainingService(short maxBufferSize) {
+    public SharedCommandChainingService(short maxBufferSize) {
         _maxBufferSize = maxBufferSize;
         _buffer = JCSystem.makeTransientByteArray(_maxBufferSize, JCSystem.CLEAR_ON_DESELECT);
     }
@@ -45,11 +45,11 @@ public final class CommandChainingService {
             readCount = apdu.receiveBytes(offsetCData);
         }
 
-        if (_bufferINS == Constants.B_FF) {
+        if (_bufferINS == SharedConstants.B_FF) {
             _bufferINS = INS;
         }
 
-        if (_bufferP1P2 == Constants.S_FFFF) {
+        if (_bufferP1P2 == SharedConstants.S_FFFF) {
             _bufferP1P2 = P1P2;
         }
 
@@ -58,16 +58,16 @@ public final class CommandChainingService {
             ISOException.throwIt(ISO7816.SW_LAST_COMMAND_EXPECTED);
         }
 
-        if (CLA == ApduConstantsShared.HW_CHAIN_CLA) {
+        if (CLA == SharedApduConstants.HW_CHAIN_CLA) {
             ISOException.throwIt(ISO7816.SW_NO_ERROR);
         }
     }
 
     public void resetBuffer() {
-        _bufferOffset = Constants.S_0;
-        _bufferINS = Constants.B_FF;
-        _bufferP1P2 = Constants.S_FFFF;
+        _bufferOffset = SharedConstants.S_0;
+        _bufferINS = SharedConstants.B_FF;
+        _bufferP1P2 = SharedConstants.S_FFFF;
 
-        Util.arrayFillNonAtomic(_buffer, Constants.S_0, _maxBufferSize, Constants.B_0);
+        Util.arrayFillNonAtomic(_buffer, SharedConstants.S_0, _maxBufferSize, SharedConstants.B_0);
     }
 }

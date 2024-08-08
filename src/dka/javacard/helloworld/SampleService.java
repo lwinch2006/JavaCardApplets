@@ -1,8 +1,5 @@
 package dka.javacard.helloworld;
 
-import dka.javacard.shared.ApduUtils;
-import dka.javacard.shared.CommandChainingService;
-import dka.javacard.shared.Constants;
 import javacard.framework.APDU;
 import javacard.framework.Util;
 
@@ -12,7 +9,7 @@ public final class SampleService {
 
     public SampleService() {}
 
-    public void getBufferBytesSum(APDU apdu, CommandChainingService commandChainingService) {
+    public void getBufferBytesSum(APDU apdu, SharedCommandChainingService commandChainingService) {
         short sum = 0;
 
         byte[] buffer = commandChainingService.getBuffer();
@@ -21,8 +18,8 @@ public final class SampleService {
             sum += buffer[index];
         }
 
-        Util.setShort(_shortValueAsBytes, Constants.S_0, sum);
-        ApduUtils.sendDataToCAD(apdu, _shortValueAsBytes, (short) 2);
+        Util.setShort(_shortValueAsBytes, SharedConstants.S_0, sum);
+        SharedApduUtils.sendDataToCAD(apdu, _shortValueAsBytes, (short) 2);
         commandChainingService.resetBuffer();
     }
 }

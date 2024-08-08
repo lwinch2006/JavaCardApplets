@@ -1,13 +1,12 @@
-package dka.javacard.shared;
+package dka.javacard.helloworld;
 
-import dka.javacard.helloworld.ApduConstants;
 import javacard.framework.APDU;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
 import javacard.framework.Util;
 
-public final class ApduUtils {
-    private ApduUtils() {}
+public final class SharedApduUtils {
+    private SharedApduUtils() {}
 
     public static byte[] _dataSource = null;
     public static short _bytesLeft = 0;
@@ -22,8 +21,8 @@ public final class ApduUtils {
         }
 
         apdu.setOutgoingLength(dataLength);
-        Util.arrayCopyNonAtomic(data, Constants.S_0, buffer, Constants.S_0, dataLength);
-        apdu.sendBytes(Constants.S_0, dataLength);
+        Util.arrayCopyNonAtomic(data, SharedConstants.S_0, buffer, SharedConstants.S_0, dataLength);
+        apdu.sendBytes(SharedConstants.S_0, dataLength);
     }
 
     public static void getResponse(APDU apdu) throws ISOException {
@@ -36,13 +35,13 @@ public final class ApduUtils {
         _bytesLeft -= dataLength;
         _bytesOffset += dataLength;
 
-        if (_bytesLeft == Constants.S_0) {
-            _bytesOffset = Constants.S_0;
+        if (_bytesLeft == SharedConstants.S_0) {
+            _bytesOffset = SharedConstants.S_0;
             return;
         }
 
         if (_bytesLeft > ApduConstants.MAX_LE_VALUE) {
-            ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | Constants.S_FF));
+            ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | SharedConstants.S_FF));
         }
 
         ISOException.throwIt((short)(ISO7816.SW_BYTES_REMAINING_00 | _bytesLeft));
